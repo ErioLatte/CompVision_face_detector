@@ -40,7 +40,7 @@ def getClassifier(cascade):
     return face_cascade
 
 # will crop image into face only & resize it
-def cropImage(cascade, images, labels=None):
+def cropImage(cascade, images, labels=None, width=640, height=480):
     # to contain image that detected only 1 face
     detected_images = []
     detected_labels = []
@@ -49,15 +49,12 @@ def cropImage(cascade, images, labels=None):
     classifier = getClassifier(cascade)
     count = 0
 
-    # define image size
-    width = 640
-    height = 480 
     
     # loop through the image list
     for img, lbl in zip(images, labels):
         gray_image = cv.imread(img, 0)
         # find face
-        faces = classifier.detectMultiScale(gray_image, scaleFactor=1.2, minNeighbors=5)
+        faces = classifier.detectMultiScale(gray_image, scaleFactor=1.2, minNeighbors=5, minSize=(30, 30), flags=cv.CASCADE_DO_ROUGH_SEARCH)
         # if only one face detected 
         if len(faces)==1:
              count+=1
@@ -76,7 +73,4 @@ def cropImage(cascade, images, labels=None):
     # print(count)
     
     return detected_images, detected_labels
-
-
-image_path = ".\\Dataset\\cristiano_ronaldo\\1.jpg"
 
